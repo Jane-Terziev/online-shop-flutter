@@ -33,10 +33,7 @@ class AuthenticationService {
         'email': data.name,
         'password': data.password
       });
-      if(response.statusCode == 200) {
-        print("SUCCESS!");
-      }
-      else {
+      if(response.statusCode != 200) {
         Map jsonResponse = convert.jsonDecode(response.body);
         String message = "";
         Map errors = jsonResponse["message"];
