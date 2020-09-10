@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:http/http.dart' as http;
+import 'package:online_shop/services/base_api_client.dart';
 import 'dart:convert' as convert;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:online_shop/models/register_data.dart';
 
-class AuthenticationService {
+class AuthenticationService extends BaseApiClient {
   static const Duration loginTime = Duration(milliseconds: 2250);
-  static const  String BASE_URL = "https://online-shop-rails-api.herokuapp.com/";
 
   static Future<String> authUser(LoginData data) {
     return Future.delayed(loginTime).then((_) async {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      var response = await http.post(BASE_URL + "oauth/token", body: {
+      var response = await http.post(BaseApiClient.getBaseURL() + "oauth/token", body: {
         'email': data.name,
         'password': data.password,
         'grant_type': 'password'
       });
       if (response.statusCode == 200) {
         var jsonResponse = convert.jsonDecode(response.body);
-        sharedPreferences.setString("token", jsonResponse["token"]);
+        sharedPreferences.setString("token", jsonResponse["access_token"]);
       } else {
         return "Invalid Credentials";
       }
@@ -29,7 +29,7 @@ class AuthenticationService {
 
   static Future<String> registerUser(LoginData data) {
     return Future.delayed(loginTime).then((_) async {
-      var response = await http.post(BASE_URL + "api/v1/client/users", body: {
+      var response = await http.post(BaseApiClient.getBaseURL() + "/users", body: {
         'email': data.name,
         'password': data.password
       });

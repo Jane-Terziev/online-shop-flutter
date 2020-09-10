@@ -1,5 +1,6 @@
-// main.dart
 import 'package:flutter/material.dart';
+
+import 'screens/category_screen.dart';
 import 'screens/login_screen.dart';
 
 void main() => runApp(MyApp());
@@ -17,7 +18,10 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: LoginScreen(),
+      routes: {
+        '/': (context) => LoginScreen(),
+        '/categories': (context) => CategoryScreen(),
+      },
     );
   }
 }

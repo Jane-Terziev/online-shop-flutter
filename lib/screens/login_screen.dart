@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:online_shop/screens/category_screen.dart';
 import 'package:online_shop/services/authentication_service.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class LoginScreen extends StatelessWidget {
       onSignup: AuthenticationService.registerUser,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => null,
+          builder: (context) => CategoryScreen(),
         ));
       },
       onRecoverPassword: AuthenticationService.recoverPassword,
