@@ -1,5 +1,3 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 class BaseApiClient {
   static const String BASE_URL = "https://online-shop-rails-api.herokuapp.com/";
   static const String CLIENT_URL = BASE_URL + "api/v1/client";

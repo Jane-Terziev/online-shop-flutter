@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_shop/services/base_api_client.dart';
 import 'dart:convert' as convert;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:online_shop/models/register_data.dart';
 
 class AuthenticationService extends BaseApiClient {
   static const Duration loginTime = Duration(milliseconds: 2250);

@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:online_shop/models/category.dart';
 import 'package:online_shop/services/base_api_client.dart';
-import 'package:online_shop/services/category_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'category_card.dart';
 
 
@@ -22,7 +20,6 @@ class _CategoriesListViewState extends State<CategoriesListView> {
   Future<List<Category>> getData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString("token");
-    print(token);
     if(token != null) {
       final response = await http.get(BaseApiClient.CATEGORY_URL, headers: BaseApiClient.getHeaders(token));
       if (response.statusCode == 200) {
@@ -52,7 +49,7 @@ class _CategoriesListViewState extends State<CategoriesListView> {
   @override
   Widget build(BuildContext context) {
     return _progressController
-        ? CircularProgressIndicator()
+        ? Center(child: SpinKitRotatingPlain(color: Colors.lightBlue, size: 100,))
         : ListView.builder(
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (context, index) {

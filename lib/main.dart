@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:online_shop/screens/login_screen.dart';
+import 'package:online_shop/screens/settings_screen.dart';
+import 'package:online_shop/screens/shopping_cart_screen.dart';
 import 'screens/category_screen.dart';
-import 'screens/login_screen.dart';
+import 'screens/main_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,9 +20,12 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      home: MainPage(),
       routes: {
-        '/': (context) => LoginScreen(),
         '/categories': (context) => CategoryScreen(),
+        '/login': (context) => LoginScreen(),
+        '/shopping-cart': (context) => ShoppingCartScreen(),
+        '/settings': (context) => SettingsScreen(),
       },
     );
   }
