@@ -6,6 +6,9 @@ import 'category_screen.dart';
 import 'login_screen.dart';
 
 class MainPage extends StatefulWidget {
+  final Widget child;
+  const MainPage ({ Key key, this.child }): super(key: key);
+
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -17,6 +20,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    _child = widget.child != null ? widget.child : CategoryScreen();
     super.initState();
     checkLoginStatus();
   }

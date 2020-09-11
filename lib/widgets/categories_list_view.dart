@@ -20,19 +20,14 @@ class _CategoriesListViewState extends State<CategoriesListView> {
   Future<List<Category>> getData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString("token");
-    if(token != null) {
       final response = await http.get(BaseApiClient.CATEGORY_URL, headers: BaseApiClient.getHeaders(token));
       if (response.statusCode == 200) {
         Map jsonResponse = json.decode(response.body);
         List items = jsonResponse['items'];
         return items.map((category) => new Category.fromJson(category)).toList();
       } else {
-        throw Exception('Failed to load categories from API');
+        Navigator.of(context).pushReplacementNamed('/login');
       }
-    }
-    else {
-      Navigator.of(context).pushReplacementNamed('/');
-    }
   }
 
   @override

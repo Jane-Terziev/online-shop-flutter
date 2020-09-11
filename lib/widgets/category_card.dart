@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_shop/models/category.dart';
+import 'package:online_shop/screens/products_screen.dart';
 
 
 class CategoryCard extends StatefulWidget {
@@ -32,22 +33,31 @@ class _CategoryCardState extends State<CategoryCard> {
         opacity: _visible ? 1.0 : 0.0,
         duration: Duration(milliseconds: 300),
         child: Card(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Image.network("https://storage.googleapis.com/gd-wagtail-prod-assets/original_images/MDA2018_inline_03.jpg"),
-            Text(
-              category.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold
+          child: InkWell(
+            child: Container(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                        category.image_url
+                    ),
+                    fit: BoxFit.cover),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                category.title, style: TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
-          ],
-        ),
-      ),
+            onTap: (){
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ProductScreen(category_id: category.id.toString())),
+                      (Route<dynamic> route) => false
+              );
+            },
+          ),
+          ),
     );
   }
 
