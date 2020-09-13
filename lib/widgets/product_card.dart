@@ -36,13 +36,13 @@ class _ProductCardState extends State<ProductCard> {
 
           },
           child: Container(
-            height: 250,
+            height: 200,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width / 2,
-                  height: 250,
+                  height: 200,
                   child: FittedBox(
                     child: MeetNetworkImage(
                       imageUrl: widget.product.image_url,
@@ -64,6 +64,7 @@ class _ProductCardState extends State<ProductCard> {
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 15),
                     Align(
@@ -73,20 +74,33 @@ class _ProductCardState extends State<ProductCard> {
                         child: Text(
                           widget.product.description,
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 10,
+                          maxLines: 7,
                           style: TextStyle(
                             fontSize: 15,
                           ),
                         ),
                       ),
                     ),
-                    Flexible(child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        "\$" + widget.product.price,
-                        style: TextStyle(color: Colors.green, fontSize: 20),
+                    Flexible(child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Stock: " + widget.product.in_stock,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              "\$" + widget.product.price,
+                              style: TextStyle(color: Colors.green, fontSize: 20),
+                            ),
+                          ],
+                        ),
                       ),
-                    ))
+                    )
+                    ),
                   ],
                 )),
               ],

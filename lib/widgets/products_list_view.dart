@@ -57,6 +57,7 @@ class _ProductsListViewState extends State<ProductsListView> {
         : ListView.builder(
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (context, index) {
+          print(data[index]);
           return ProductCard(product: data[index]);
         }
     );
