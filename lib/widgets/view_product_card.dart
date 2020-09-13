@@ -71,7 +71,7 @@ class _ViewProductCardState extends State<ViewProductCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              Flexible(child: Text(
                 widget.product.title,
                 style: TextStyle(
                     fontSize: 40,
@@ -80,7 +80,7 @@ class _ViewProductCardState extends State<ViewProductCard> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 3,
                 softWrap: false,
-              ),
+              )),
             ],
           ),
           SizedBox(height: 10),
