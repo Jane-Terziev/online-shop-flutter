@@ -4,6 +4,7 @@ class BaseApiClient {
   static const String LOGIN_URL = BASE_URL + "/oauth/token";
   static const String REGISTER_URL = CLIENT_URL + "/users";
   static const String CATEGORY_URL = CLIENT_URL + "/categories";
+  static const String CREATE_PRODUCT_URL = CLIENT_URL + "/products";
 
   static String getBaseURL(){
     return BASE_URL;

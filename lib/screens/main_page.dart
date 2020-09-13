@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_shop/screens/create_product_screen.dart';
 import 'package:online_shop/screens/settings_screen.dart';
 import 'package:online_shop/screens/shopping_cart_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,32 +42,71 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(_title, style: TextStyle(color: Colors.white)),
-          iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-          centerTitle: true,
-        ),
-        body: _child,
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.category),
-              label: 'Categories',
+    return SafeArea(
+        child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            appBar: AppBar(
+              title: Text(_title, style: TextStyle(color: Colors.white)),
+              iconTheme: IconThemeData(
+                color: Colors.white, //change your color here
+              ),
+              centerTitle: true,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: 'Shopping Cart',
+            body: _child,
+            bottomNavigationBar: BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.category),
+                  label: 'Categories',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart),
+                  label: 'Shopping Cart',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: 'Settings',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
+            drawer: Theme(
+              data: Theme.of(context).copyWith(
+                canvasColor: Colors.lightBlue,
+              ),
+              child: Drawer(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: <Widget>[
+                    DrawerHeader(
+                      child: Image.asset("assets/images/ecorp-lightblue.png"),
+                    ),
+                    ListTile(
+                      title: Center(
+                        child: Text('Sell an Item',
+                            style: TextStyle(
+                                fontSize: 30,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold
+                            )
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => MainPage(
+                                  child: CreateProductScreen(),
+                                  title: "Add Product",
+                                )),
+                                (Route<dynamic> route) => false
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            )
         )
     );
   }

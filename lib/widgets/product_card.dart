@@ -36,12 +36,14 @@ class _ProductCardState extends State<ProductCard> {
 
           },
           child: Container(
-            height: 130,
+            height: 250,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Expanded(
-                  child: Container(
+                Container(
+                  width: MediaQuery.of(context).size.width / 2,
+                  height: 250,
+                  child: FittedBox(
                     child: MeetNetworkImage(
                       imageUrl: widget.product.image_url,
                       loadingBuilder: (context) => Center(
@@ -51,43 +53,42 @@ class _ProductCardState extends State<ProductCard> {
                         child: Text('Error appear!'),
                       ),
                     ),
+                    fit: BoxFit.fill,
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        widget.product.title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
+                Expanded(child: Column(
+                  children: [
+                    Text(
+                      widget.product.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
                       ),
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 5),
-                          child: Text(
-                            widget.product.description,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
+                    ),
+                    SizedBox(height: 15),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          widget.product.description,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 10,
+                          style: TextStyle(
+                            fontSize: 15,
                           ),
                         ),
                       ),
-                      Flexible(child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          "\$" + widget.product.price,
-                          style: TextStyle(color: Colors.green, fontSize: 20),
-                        ),
-                      ))
-                    ],
-                  ),
-                )
+                    ),
+                    Flexible(child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        "\$" + widget.product.price,
+                        style: TextStyle(color: Colors.green, fontSize: 20),
+                      ),
+                    ))
+                  ],
+                )),
               ],
             ),
           )
@@ -95,7 +96,6 @@ class _ProductCardState extends State<ProductCard> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
