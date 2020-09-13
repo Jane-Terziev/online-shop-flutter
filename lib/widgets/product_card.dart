@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meet_network_image/meet_network_image.dart';
 import 'package:online_shop/models/product.dart';
+import 'package:online_shop/screens/view_product_screen.dart';
 
 
 class ProductCard extends StatefulWidget {
@@ -33,7 +34,10 @@ class _ProductCardState extends State<ProductCard> {
       child: Card(
         child: InkWell(
           onTap: (){
-
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewProductScreen(product: widget.product)),
+            );
           },
           child: Container(
             height: 200,

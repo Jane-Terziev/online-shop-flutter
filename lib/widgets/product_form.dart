@@ -7,10 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_shop/services/base_api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
-import 'dart:convert';
 
 class ProductForm extends StatefulWidget {
   @override
@@ -24,7 +22,6 @@ class _ProductFormState extends State<ProductForm> {
   String _description;
   double _price;
   int _in_stock;
-  String _category;
   File _image;
 
   Future<http.Response> createProduct(context) async {

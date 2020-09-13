@@ -25,9 +25,9 @@ class _CategoriesListViewState extends State<CategoriesListView> {
         Map jsonResponse = json.decode(response.body);
         List items = jsonResponse['items'];
         return items.map((category) => new Category.fromJson(category)).toList();
-      } else {
-        Navigator.of(context).pushReplacementNamed('/login');
-      }
+      } else if(response.statusCode == 401){
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
   }
 
   @override

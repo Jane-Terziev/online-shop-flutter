@@ -5,6 +5,8 @@ class BaseApiClient {
   static const String REGISTER_URL = CLIENT_URL + "/users";
   static const String CATEGORY_URL = CLIENT_URL + "/categories";
   static const String CREATE_PRODUCT_URL = CLIENT_URL + "/products";
+  static const String ADD_TO_CART_URL = CLIENT_URL + "/orders";
+  static const String GET_SHOPPING_CART = CLIENT_URL + "/orders";
 
   static String getBaseURL(){
     return BASE_URL;
@@ -12,6 +14,10 @@ class BaseApiClient {
 
   static String getProductByCategoryURL(String category_id){
     return CATEGORY_URL + "/" + category_id + "/products";
+  }
+
+  static String getShowProductURL(String category_id){
+    return CLIENT_URL + '/product/' + category_id;
   }
 
   static Map<String, String> getHeaders(String token) {

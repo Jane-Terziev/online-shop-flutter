@@ -27,8 +27,9 @@ class _ProductsListViewState extends State<ProductsListView> {
     if (response.statusCode == 200) {
       Map jsonResponse = json.decode(response.body);
       List items = jsonResponse['items'];
+      print(response.body);
       return items.map((product) => new Product.fromJson(product)).toList();
-    } else {
+    } else if(response.statusCode == 401){
       Navigator.of(context).pushReplacementNamed('/login');
     }
   }
