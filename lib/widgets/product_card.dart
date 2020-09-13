@@ -71,13 +71,20 @@ class _ProductCardState extends State<ProductCard> {
                           child: Text(
                             widget.product.description,
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 5,
+                            maxLines: 3,
                             style: TextStyle(
                               fontSize: 15,
                             ),
                           ),
                         ),
                       ),
+                      Flexible(child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          "\$" + widget.product.price,
+                          style: TextStyle(color: Colors.green, fontSize: 20),
+                        ),
+                      ))
                     ],
                   ),
                 )
@@ -88,50 +95,6 @@ class _ProductCardState extends State<ProductCard> {
       ),
     );
   }
-
-
-  //Container(
-  //             child: Card(
-  //               child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.start,
-  //                 children: <Widget>[
-  //                   Expanded(
-  //                     flex: 3,
-  //                     child: Container(
-  //                       child: FadeInImage.assetNetwork(
-  //                         alignment: Alignment.topCenter,
-  //                         placeholder: widget.product.image_url,
-  //                         image: widget.product.image_url,
-  //                         fit: BoxFit.none,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Expanded(
-  //                       flex: 3,
-  //                       child: Container(
-  //                         child: Column(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: <Widget>[
-  //                             Row(
-  //                               mainAxisAlignment: MainAxisAlignment.center,
-  //                               children: <Widget>[
-  //                                 Container(child: Text(widget.product.title)),
-  //                               ],
-  //                             ),
-  //                             Row(
-  //                               children: <Widget>[
-  //                                 Container(child: Text(widget.product.description)),
-  //                               ],
-  //                             ),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                   )
-  //                 ],
-  //               ),
-  //             ),
-  //           )
-
 
 
   @override

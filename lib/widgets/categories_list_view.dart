@@ -34,6 +34,7 @@ class _CategoriesListViewState extends State<CategoriesListView> {
   void initState(){
     super.initState();
     this.getData().then((value) {
+      if (!mounted) return;
       setState(() {
         data = value;
         _progressController = false;
