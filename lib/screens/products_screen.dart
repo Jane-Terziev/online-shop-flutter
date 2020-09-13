@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_shop/widgets/products_list_view.dart';
 
-
 class ProductScreen extends StatefulWidget {
   final String category_id;
   const ProductScreen ({ Key key, this.category_id }): super(key: key);

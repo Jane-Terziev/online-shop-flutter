@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:online_shop/models/product.dart';
-import 'package:online_shop/screens/category_screen.dart';
-import 'package:online_shop/screens/main_page.dart';
 import 'package:online_shop/services/base_api_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_shop/widgets/product_card.dart';
@@ -49,9 +47,9 @@ class _ProductsListViewState extends State<ProductsListView> {
   @override
   Widget build(BuildContext context) {
     if(data != null && data.isEmpty) {
-      return MainPage(child: Center(
-        child: Text("Category has no products.", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-      ));
+      return Center(
+        child: Text("Category has no products.", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+      );
     }
     return _progressController
         ? Center(child: SpinKitRotatingPlain(color: Colors.lightBlue, size: 100,))

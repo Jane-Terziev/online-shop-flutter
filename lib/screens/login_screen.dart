@@ -3,6 +3,8 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:online_shop/screens/category_screen.dart';
 import 'package:online_shop/services/authentication_service.dart';
 
+import 'main_page.dart';
+
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class LoginScreen extends StatelessWidget {
       onSignup: AuthenticationService.registerUser,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => CategoryScreen(),
+          builder: (context) => MainPage(),
         ));
       },
       onRecoverPassword: AuthenticationService.recoverPassword,

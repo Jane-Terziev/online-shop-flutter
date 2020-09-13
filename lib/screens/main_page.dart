@@ -7,7 +7,8 @@ import 'login_screen.dart';
 
 class MainPage extends StatefulWidget {
   final Widget child;
-  const MainPage ({ Key key, this.child }): super(key: key);
+  final String title;
+  const MainPage ({ Key key, this.child, this.title }): super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -15,12 +16,14 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
+  String _title;
   SharedPreferences sharedPreferences;
-  Widget _child = CategoryScreen();
+  Widget _child;
 
   @override
   void initState() {
     _child = widget.child != null ? widget.child : CategoryScreen();
+    _title = widget.title != null ? widget.title : "Categories";
     super.initState();
     checkLoginStatus();
   }
@@ -40,7 +43,10 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Ecommerce', style: TextStyle(color: Colors.white)),
+          title: Text(_title, style: TextStyle(color: Colors.white)),
+          iconTheme: IconThemeData(
+            color: Colors.white, //change your color here
+          ),
           centerTitle: true,
         ),
         body: _child,
@@ -71,18 +77,21 @@ class _MainPageState extends State<MainPage> {
         setState(() {
           _selectedIndex = index;
           _child = CategoryScreen();
+          _title = 'Categories';
         });
         break;
       case 1:
         setState(() {
           _selectedIndex = index;
           _child = ShoppingCartScreen();
+          _title = 'Shopping Cart';
         });
         break;
       case 2:
         setState(() {
           _selectedIndex = index;
-          _child = SettingsScreen();
+          _child = SettingsScreen(sharedPreference: sharedPreferences);
+          _title = 'Settings';
         });
         break;
     }

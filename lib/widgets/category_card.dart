@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:online_shop/models/category.dart';
+import 'package:online_shop/screens/main_page.dart';
 import 'package:online_shop/screens/products_screen.dart';
 
 
 class CategoryCard extends StatefulWidget {
-  CategoryCard({this.category});
-  Category category;
+  final Category category;
+  const CategoryCard ({ Key key, this.category }): super(key: key);
   @override
-  _CategoryCardState createState() => _CategoryCardState(category: category);
+  _CategoryCardState createState() => _CategoryCardState();
 }
 
 class _CategoryCardState extends State<CategoryCard> {
-  _CategoryCardState({this.category});
-  Category category;
   bool _visible = false;
 
   @override
@@ -30,34 +29,37 @@ class _CategoryCardState extends State<CategoryCard> {
 
   Widget get categoryCard {
     return new AnimatedOpacity(
-        opacity: _visible ? 1.0 : 0.0,
-        duration: Duration(milliseconds: 300),
-        child: Card(
-          child: InkWell(
-            child: Container(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(
-                        category.image_url
-                    ),
-                    fit: BoxFit.cover),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                category.title, style: TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.bold),
-              ),
+      opacity: _visible ? 1.0 : 0.0,
+      duration: Duration(milliseconds: 300),
+      child: Card(
+        child: InkWell(
+          child: Container(
+            height: 200,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(
+                      widget.category.image_url
+                  ),
+                  fit: BoxFit.cover),
             ),
-            onTap: (){
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => ProductScreen(category_id: category.id.toString())),
-                      (Route<dynamic> route) => false
-              );
-            },
+            alignment: Alignment.center,
+            child: Text(
+              widget.category.title, style: TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ),
-          ),
+          onTap: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MainPage(
+                child: ProductScreen(category_id: widget.category.id.toString()),
+                title: widget.category.title,
+              ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 
