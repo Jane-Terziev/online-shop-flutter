@@ -23,16 +23,9 @@ class _ProductFormState extends State<ProductForm> {
   String _title;
   String _description;
   double _price;
-  int _instock;
+  int _in_stock;
   String _category;
   File _image;
-  List categories = [
-    'Accessories',
-    'Toys',
-    'Electronics',
-    'Clothes',
-    'Educational',
-  ];
 
   Future<http.Response> createProduct(context) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -61,11 +54,11 @@ class _ProductFormState extends State<ProductForm> {
     //add headers
     request.headers.addAll(headers);
 
-    //adding params
     request.fields['title'] = _title;
     request.fields['description'] = _description;
-    request.fields['price'] = "123.321";
+    request.fields['price'] = _price.toString();
     request.fields['category_id'] = "7";
+    request.fields['in_stock'] = _in_stock.toString();
 
     // send
     var response = await request.send();
@@ -209,6 +202,25 @@ class _ProductFormState extends State<ProductForm> {
                   },
                   onSaved: (String value){
                     _price = double.parse(value);
+                  },
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  decoration: const InputDecoration(
+                    labelText: 'In Stock',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty || int.parse(value) <= 0) {
+                      return 'Please enter a value bigger than 0';
+                    }
+                    return null;
+                  },
+                  onSaved: (String value){
+                    _in_stock = int.parse(value);
                   },
                 ),
                 SizedBox(height: 20),
