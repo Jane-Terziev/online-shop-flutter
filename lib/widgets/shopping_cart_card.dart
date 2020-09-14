@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:meet_network_image/meet_network_image.dart';
 import 'package:online_shop/models/order_item.dart';
@@ -20,15 +22,18 @@ class _ShoppingCartCardState extends State<ShoppingCartCard> {
   void remove_item() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString("token");
-    final response = await http.delete(
-        BaseApiClient.getDestroyOrderItemURL(widget.order_item.product.id.toString()),
+    final response = await http.post(
+        BaseApiClient.REMOVE_ITEM_FROM_CART_URL,
+        body: jsonEncode(<String, dynamic>{
+          'product_id': widget.order_item.product.id,
+        }),
         headers: BaseApiClient.getHeaders(token)
     );
     print(response.body);
     if(response.statusCode == 200){
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-              builder: (BuildContext context) => MainPage(child: ShoppingCartScreen(), title: "Shopping Cart",)),
+              builder: (BuildContext context) => MainPage(child: ShoppingCartScreen(), title: "Shopping Cart",selected_index: 1,)),
               (Route<dynamic> route) => false
       );
     }

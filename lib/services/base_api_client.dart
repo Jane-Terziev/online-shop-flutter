@@ -8,6 +8,7 @@ class BaseApiClient {
   static const String ADD_TO_CART_URL = CLIENT_URL + "/orders";
   static const String GET_SHOPPING_CART = CLIENT_URL + "/orders";
   static const String CHECKOUT_SHOPPING_CART = CLIENT_URL + "/checkout";
+  static const String REMOVE_ITEM_FROM_CART_URL = CLIENT_URL + "/remove_item";
 
   static String getBaseURL(){
     return BASE_URL;
@@ -21,8 +22,8 @@ class BaseApiClient {
     return CLIENT_URL + '/product/' + category_id;
   }
 
-  static String getDestroyOrderItemURL(String product_id){
-    return CLIENT_URL + '/orders/' + product_id;
+  static String getDestroyOrderItemURL(){
+    return CLIENT_URL + '/orders/remove_item';
   }
 
   static Map<String, String> getHeaders(String token) {

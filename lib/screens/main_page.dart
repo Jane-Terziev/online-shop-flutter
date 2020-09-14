@@ -11,7 +11,8 @@ import 'package:http/http.dart' as http;
 class MainPage extends StatefulWidget {
   final Widget child;
   final String title;
-  const MainPage ({ Key key, this.child, this.title }): super(key: key);
+  final int selected_index;
+  const MainPage ({ Key key, this.child, this.title, this.selected_index}): super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -29,6 +30,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     _child = widget.child != null ? widget.child : CategoryScreen();
     _title = widget.title != null ? widget.title : "Categories";
+    _selectedIndex = widget.selected_index != null ? widget.selected_index : 0;
     super.initState();
     checkLoginStatus();
   }
