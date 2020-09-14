@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:online_shop/models/product.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:online_shop/models/cart.dart';
 import 'package:online_shop/services/base_api_client.dart';
+import 'package:online_shop/widgets/shopping_cart_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,18 +14,17 @@ class ShoppingCartScreen extends StatefulWidget {
 }
 
 class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
-  List<Product> data;
-  bool _progressController = true;
+  Cart data;
 
-  Future<List<Product>> getData() async {
+  Future<Cart> getData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString("token");
-    final response = await http.get(BaseApiClient.CATEGORY_URL, headers: BaseApiClient.getHeaders(token));
+    final response = await http.get(BaseApiClient.GET_SHOPPING_CART, headers: BaseApiClient.getHeaders(token));
+    print(response.body);
     if (response.statusCode == 200) {
       Map jsonResponse = json.decode(response.body);
-      List items = jsonResponse['items'];
-      return items.map((product) => new Product.fromJson(product)).toList();
-    } else {
+      return Cart.fromJson(jsonResponse);
+    } else if(response.statusCode == 401){
       Navigator.of(context).pushReplacementNamed('/login');
     }
   }
@@ -35,7 +36,6 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
       if (!mounted) return;
       setState(() {
         data = value;
-        _progressController = false;
       });
     });
   }
@@ -43,8 +43,21 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("Shopping Cart is empty.", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-    );
+    if(data == null){
+      return Center(child: SpinKitRotatingPlain(color: Colors.lightBlue, size: 100,));
+    }
+    else {
+      if(data.order_items.isEmpty){
+        return Center(
+          child: Text("Shopping cart is empty.", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+        );
+      }
+      return ListView.builder(
+          itemCount: data == null ? 0 : data.order_items.length,
+          itemBuilder: (context, index) {
+            return ShoppingCartCard(order_item: data.order_items[index]);
+          }
+      );
+    }
   }
 }

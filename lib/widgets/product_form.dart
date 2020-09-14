@@ -70,7 +70,6 @@ class _ProductFormState extends State<ProductForm> {
 
     // listen for response
     response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
     });
   }
 

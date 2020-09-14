@@ -20,8 +20,6 @@ class _ViewProductCardState extends State<ViewProductCard> {
   void addToCart(context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString("token");
-    print(widget.product.id);
-    print(_quantity);
     final response = await http.post(
         BaseApiClient.ADD_TO_CART_URL,
         body: jsonEncode(<String, dynamic>{
@@ -30,7 +28,6 @@ class _ViewProductCardState extends State<ViewProductCard> {
         }),
         headers: BaseApiClient.getHeaders(token)
     );
-    print(response.body);
     if (response.statusCode == 200) {
       _showToastSuccess(context);
     } else if(response.statusCode == 401){
