@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:online_shop/models/category.dart';
 import 'package:online_shop/services/base_api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
+
+import 'dropdown_form_field.dart';
 
 class ProductForm extends StatefulWidget {
   @override
@@ -23,6 +26,20 @@ class _ProductFormState extends State<ProductForm> {
   double _price;
   int _in_stock;
   File _image;
+  String _category_id;
+
+  List<Category> data;
+
+  Future<List<Category>> getData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString("token");
+    final response = await http.get(BaseApiClient.CATEGORY_URL, headers: BaseApiClient.getHeaders(token));
+    if (response.statusCode == 200) {
+      Map jsonResponse = json.decode(response.body);
+      List items = jsonResponse['items'];
+      return items.map((category) => new Category.fromJson(category)).toList();
+    }
+  }
 
   Future<http.Response> createProduct(context) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -54,7 +71,7 @@ class _ProductFormState extends State<ProductForm> {
     request.fields['title'] = _title;
     request.fields['description'] = _description;
     request.fields['price'] = _price.toString();
-    request.fields['category_id'] = "7";
+    request.fields['category_id'] = _category_id;
     request.fields['in_stock'] = _in_stock.toString();
 
     // send
@@ -125,124 +142,167 @@ class _ProductFormState extends State<ProductForm> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: Form(
-          key: _formKey,
-          child: Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: _image != null ? Image.file(
-                    _image,
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.fitHeight,
-                  ) : Image.asset(
-                    "assets/images/broken_image.png",
-                    width: 200,
-                    height: 200,
-                  ),
-                ),
-                Center(
-                  child: OutlineButton(
-                    onPressed: (){
-                      _showPicker(context);
-                    },
-                    child: Text('Choose Image'),
-                  ),
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter a product name';
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Product name',
-                  ),
-                  onSaved: (String value) {
-                    _title = value;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  validator: (value) {
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Product Description',
-                  ),
-                  onSaved: (String value) {
-                    _description = value;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                    labelText: 'Price',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty || double.parse(value) <= 0) {
-                      return 'Please enter a price bigger than 0';
-                    }
-                    return null;
-                  },
-                  onSaved: (String value){
-                    _price = double.parse(value);
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  decoration: const InputDecoration(
-                    labelText: 'In Stock',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty || int.parse(value) <= 0) {
-                      return 'Please enter a value bigger than 0';
-                    }
-                    return null;
-                  },
-                  onSaved: (String value){
-                    _in_stock = int.parse(value);
-                  },
-                ),
-                SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: RaisedButton(
-                    onPressed: () {
-                      if(!_formKey.currentState.validate()){
-                        return;
-                      }
-                      if(_image == null){
-                        _showToastError(context);
-                        return;
-                      }
-                      _formKey.currentState.save();
-                      createProduct(context);
-                    },
-                    child: const Text('Add Product', style: TextStyle(fontSize: 20)),
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    elevation: 5,
-                  ),
-                )
-              ],
+  void initState(){
+    super.initState();
+    this.getData().then((value) {
+      if (!mounted) return;
+      setState(() {
+        data = value;
+      });
+    });
+  }
+
+  List<DropdownMenuItem<String>> getCategories(){
+    List<DropdownMenuItem<String>> categories = [];
+    if(data != null){
+      data.forEach((element) {
+        categories.add(
+            DropdownMenuItem<String>(
+              value: element.id.toString(),
+              child: Text(element.title),
             ),
-          )
+        );
+      });
+    }
+    return categories;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        child: Form(
+            key: _formKey,
+            child: Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(
+                    child: _image != null ? Image.file(
+                      _image,
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.fitHeight,
+                    ) : Image.asset(
+                      "assets/images/broken_image.png",
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+                  Center(
+                    child: OutlineButton(
+                      onPressed: (){
+                        _showPicker(context);
+                      },
+                      child: Text('Choose Image'),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter a product name';
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Product name',
+                    ),
+                    onSaved: (String value) {
+                      _title = value;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    validator: (value) {
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Product Description',
+                    ),
+                    onSaved: (String value) {
+                      _description = value;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      labelText: 'Price',
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty || double.parse(value) <= 0) {
+                        return 'Please enter a price bigger than 0';
+                      }
+                      return null;
+                    },
+                    onSaved: (String value){
+                      _price = double.parse(value);
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: const InputDecoration(
+                      labelText: 'In Stock',
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty || int.parse(value) <= 0) {
+                        return 'Please enter a value bigger than 0';
+                      }
+                      return null;
+                    },
+                    onSaved: (String value){
+                      _in_stock = int.parse(value);
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Expanded(child: DropdownFormField<String>(
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please choose a category';
+                      }
+                    },
+                    onSaved: (value) {
+                      _category_id = value;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Category',
+                    ),
+                    initialValue: null,
+                    items: getCategories(),
+                  ),),
+                  Expanded(child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: RaisedButton(
+                      onPressed: () {
+                        if(!_formKey.currentState.validate()){
+                          return;
+                        }
+                        if(_image == null){
+                          _showToastError(context);
+                          return;
+                        }
+                        _formKey.currentState.save();
+                        createProduct(context);
+                      },
+                      child: const Text('Add Product', style: TextStyle(fontSize: 20)),
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      elevation: 5,
+                    ),
+                  )),
+                ],
+              ),
+            )
+        ),
       ),
     );
   }
