@@ -49,113 +49,102 @@ class _ViewProductCardState extends State<ViewProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 300,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(
-                      widget.product.image_url
-                  ),
-                  fit: BoxFit.cover),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(child: Text(
-                widget.product.title,
-                style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                softWrap: false,
-              )),
-            ],
-          ),
-          SizedBox(height: 10),
-          Text(
-            widget.product.description,
-            style: TextStyle(
-              color: Colors.black.withOpacity(0.6),
-            ),
-          ),
-          SizedBox(height: 20,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "In stock: " + widget.product.in_stock,
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold
-                ),
+    return SingleChildScrollView(
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 300,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                        widget.product.image_url
+                    ),
+                    fit: BoxFit.cover),
               ),
-              Text(
-                  "\$" + widget.product.price,
+            ),
+            SizedBox(height: 10),
+            Text(
+              widget.product.description,
+              style: TextStyle(
+                color: Colors.black.withOpacity(0.6),
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "In stock: " + widget.product.in_stock,
                   style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green
-                  )
-              ),
-            ],
-          ),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  decoration: const InputDecoration(
-                    labelText: 'Quantity',
+                      fontWeight: FontWeight.bold
                   ),
-                  validator: (value) {
-                    if (value.isEmpty || int.parse(value) <= 0) {
-                      return 'Please enter a value bigger than 0';
-                    }
-                    if(int.parse(value) > int.parse(widget.product.in_stock)){
-                      return 'Please enter a value below or equal to ' + widget.product.in_stock;
-                    }
-                    return null;
-                  },
-                  onSaved: (String value){
-                    _quantity = int.parse(value);
-                  },
+                ),
+                Text(
+                    "\$" + widget.product.price,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green
+                    )
                 ),
               ],
             ),
-          ),
-          Expanded(child: Align(
-              alignment: Alignment.bottomLeft,
-              child: ButtonTheme(
-                minWidth: MediaQuery.of(context).size.width,
-                child: RaisedButton.icon(
-                    color: Colors.lightBlue,
-                    onPressed: () {
-                      if(!_formKey.currentState.validate()){
-                        return;
+            SizedBox(height: 70,),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: const InputDecoration(
+                      labelText: 'Quantity',
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty || int.parse(value) <= 0) {
+                        return 'Please enter a value bigger than 0';
                       }
-                      _formKey.currentState.save();
-                      addToCart(context);
+                      if(int.parse(value) > int.parse(widget.product.in_stock)){
+                        return 'Please enter a value below or equal to ' + widget.product.in_stock;
+                      }
+                      return null;
                     },
-                    icon: Icon(Icons.shopping_cart, color: Colors.white,),
-                    label: Text("Add to cart", style: TextStyle(color: Colors.white),)
-                ),
-              )
-          ),
-          ),
-        ],
+                    onSaved: (String value){
+                      _quantity = int.parse(value);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 150,),
+            Align(
+                alignment: Alignment.bottomLeft,
+                child: ButtonTheme(
+                  minWidth: MediaQuery.of(context).size.width,
+                  child: RaisedButton.icon(
+                      color: Colors.lightBlue,
+                      onPressed: () {
+                        if(!_formKey.currentState.validate()){
+                          return;
+                        }
+                        _formKey.currentState.save();
+                        addToCart(context);
+                      },
+                      icon: Icon(Icons.shopping_cart, color: Colors.white,),
+                      label: Text("Add to cart", style: TextStyle(color: Colors.white),)
+                  ),
+                )
+            ),
+          ],
+        ),
       ),
     );
   }

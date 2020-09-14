@@ -14,6 +14,6 @@ class ViewProductScreen extends StatefulWidget {
 class _ViewProductScreenState extends State<ViewProductScreen> {
   @override
   Widget build(BuildContext context) {
-    return MainPage(child: ViewProductCard(product: widget.product));
+    return MainPage(child: ViewProductCard(product: widget.product), title: widget.product.title,);
   }
 }
