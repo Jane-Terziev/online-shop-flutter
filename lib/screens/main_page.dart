@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:online_shop/screens/create_product_screen.dart';
 import 'package:online_shop/screens/settings_screen.dart';
 import 'package:online_shop/screens/shopping_cart_screen.dart';
+import 'package:online_shop/services/base_api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'category_screen.dart';
 import 'login_screen.dart';
+import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
   final Widget child;
@@ -20,6 +22,8 @@ class _MainPageState extends State<MainPage> {
   String _title;
   SharedPreferences sharedPreferences;
   Widget _child;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   @override
   void initState() {
@@ -40,10 +44,42 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  checkout(context) async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString("token");
+    final response = await http.put(
+        BaseApiClient.CHECKOUT_SHOPPING_CART,
+        headers: BaseApiClient.getHeaders(token)
+    );
+    print(response.body);
+    if(response.statusCode == 200){
+      _showToastSuccess(context);
+      setState(() {
+        _selectedIndex = 1;
+        _child = Center(
+          child: Text("Shopping cart is empty.", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+        );
+        _title = 'Shopping Cart';
+      });
+    }
+  }
+
+  void _showToastSuccess(BuildContext context) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.green,
+        content: const Text('Checkout successful!', style: TextStyle(color: Colors.white)),
+        action: SnackBarAction(
+          label: 'Hide', onPressed: _scaffoldKey.currentState.hideCurrentSnackBar, textColor: Colors.white,),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+            key: _scaffoldKey,
             resizeToAvoidBottomPadding: false,
             appBar: AppBar(
               title: Text(_title, style: TextStyle(color: Colors.white)),
@@ -51,6 +87,16 @@ class _MainPageState extends State<MainPage> {
                 color: Colors.white, //change your color here
               ),
               centerTitle: true,
+              actions: <Widget>[
+                _selectedIndex == 1 ? FlatButton(
+                  textColor: Colors.white,
+                  onPressed: () {
+                    checkout(context);
+                  },
+                  child: Text("Checkout"),
+                  shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+                ) : Container()
+              ],
             ),
             body: _child,
             bottomNavigationBar: BottomNavigationBar(

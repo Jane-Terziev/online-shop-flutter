@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meet_network_image/meet_network_image.dart';
 import 'package:online_shop/models/order_item.dart';
+import 'package:online_shop/screens/main_page.dart';
+import 'package:online_shop/screens/shopping_cart_screen.dart';
+import 'package:online_shop/services/base_api_client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 
 class ShoppingCartCard extends StatefulWidget {
@@ -11,6 +16,23 @@ class ShoppingCartCard extends StatefulWidget {
 }
 
 class _ShoppingCartCardState extends State<ShoppingCartCard> {
+
+  void remove_item() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString("token");
+    final response = await http.delete(
+        BaseApiClient.getDestroyOrderItemURL(widget.order_item.product.id.toString()),
+        headers: BaseApiClient.getHeaders(token)
+    );
+    print(response.body);
+    if(response.statusCode == 200){
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) => MainPage(child: ShoppingCartScreen(), title: "Shopping Cart",)),
+              (Route<dynamic> route) => false
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -61,6 +83,7 @@ class _ShoppingCartCardState extends State<ShoppingCartCard> {
           )),
           InkWell(
             onTap: (){
+              remove_item();
             },
             child: Icon(
               Icons.close,
